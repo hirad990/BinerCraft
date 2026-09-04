@@ -1,10 +1,9 @@
-﻿{
+{
   "users": [
     {
       "id": "1",
       "username": "hirad990",
       "email": "hirad@binercraft.ir",
-      "password": "Hf13911394",
       "displayName": "مدیر سایت",
       "role": "admin",
       "wallet": 1000,
@@ -14,7 +13,6 @@
       "id": "2",
       "username": "player1",
       "email": "player1@example.com",
-      "password": "player123",
       "displayName": "بازیکن شماره یک",
       "role": "user",
       "wallet": 500,
@@ -22,86 +20,16 @@
     }
   ],
   "products": [
-    {
-      "id": "1",
-      "name": "رتبه VIP",
-      "category": "رتبه‌ها",
-      "price": 50000,
-      "description": "رتبه VIP با دسترسی به امکانات ویژه",
-      "image": ""
-    },
-    {
-      "id": "2",
-      "name": "رتبه MVP",
-      "category": "رتبه‌ها",
-      "price": 100000,
-      "description": "رتبه MVP با تمام امکانات VIP",
-      "image": ""
-    },
-    {
-      "id": "3",
-      "name": "کیت الماس",
-      "category": "کیت‌ها",
-      "price": 25000,
-      "description": "کیت الماس شامل 64 عدد الماس",
-      "image": ""
-    },
-    {
-      "id": "4",
-      "name": "کیت بقا",
-      "category": "کیت‌ها",
-      "price": 15000,
-      "description": "کیت بقا شامل زره آهنی",
-      "image": ""
-    },
-    {
-      "id": "5",
-      "name": "1000 سکه",
-      "category": "سکه‌ها",
-      "price": 10000,
-      "description": "1000 سکه درون بازی",
-      "image": ""
-    },
-    {
-      "id": "6",
-      "name": "5000 سکه",
-      "category": "سکه‌ها",
-      "price": 45000,
-      "description": "5000 سکه با 10% تخفیف",
-      "image": ""
-    },
-    {
-      "id": "7",
-      "name": "بوت‌استر اکسترا",
-      "category": "بوت‌استرها",
-      "price": 20000,
-      "description": "افزایش سرعت 30% به مدت 24 ساعت",
-      "image": ""
-    },
-    {
-      "id": "8",
-      "name": "رتبه یوتیوبر",
-      "category": "رتبه‌ها",
-      "price": 150000,
-      "description": "رتبه ویژه یوتیوبرها",
-      "image": ""
-    },
-    {
-      "id": "9",
-      "name": "کیت نتیرایت",
-      "category": "کیت‌ها",
-      "price": 75000,
-      "description": "کیت نتیرایت کامل",
-      "image": ""
-    },
-    {
-      "id": "10",
-      "name": "بوت‌استر دراپ",
-      "category": "بوت‌استرها",
-      "price": 30000,
-      "description": "شانس دراپ آیتم‌ها را 50% افزایش می‌دهد",
-      "image": ""
-    }
+    { "id": "1", "name": "رتبه VIP", "category": "رتبه‌ها", "price": 50000, "description": "رتبه VIP با دسترسی به امکانات ویژه", "image": "" },
+    { "id": "2", "name": "رتبه MVP", "category": "رتبه‌ها", "price": 100000, "description": "رتبه MVP با تمام امکانات VIP", "image": "" },
+    { "id": "3", "name": "کیت الماس", "category": "کیت‌ها", "price": 25000, "description": "کیت الماس شامل 64 عدد الماس", "image": "" },
+    { "id": "4", "name": "کیت بقا", "category": "کیت‌ها", "price": 15000, "description": "کیت بقا شامل زره آهنی", "image": "" },
+    { "id": "5", "name": "1000 سکه", "category": "سکه‌ها", "price": 10000, "description": "1000 سکه درون بازی", "image": "" },
+    { "id": "6", "name": "5000 سکه", "category": "سکه‌ها", "price": 45000, "description": "5000 سکه با 10% تخفیف", "image": "" },
+    { "id": "7", "name": "بوت‌استر اکسترا", "category": "بوت‌استرها", "price": 20000, "description": "افزایش سرعت 30% به مدت 24 ساعت", "image": "" },
+    { "id": "8", "name": "رتبه یوتیوبر", "category": "رتبه‌ها", "price": 150000, "description": "رتبه ویژه یوتیوبرها", "image": "" },
+    { "id": "9", "name": "کیت نتیرایت", "category": "کیت‌ها", "price": 75000, "description": "کیت نتیرایت کامل", "image": "" },
+    { "id": "10", "name": "بوت‌استر دراپ", "category": "بوت‌استرها", "price": 30000, "description": "شانس دراپ آیتم‌ها را 50% افزایش می‌دهد", "image": "" }
   ],
   "blog": [
     {
@@ -121,35 +49,12 @@
   "orders": [],
   "cart": [],
   "notifications": [
-    {
-      "id": "1",
-      "message": "به BinerCraft خوش آمدید! 🎮",
-      "type": "default",
-      "targetUserId": null,
-      "read": false,
-      "createdAt": "2024-01-20T10:00:00"
-    }
+    { "id": "1", "message": "به BinerCraft خوش آمدید! 🎮", "type": "default", "targetUserId": null, "read": false, "createdAt": "2024-01-20T10:00:00" }
   ],
   "discounts": [
-    {
-      "id": "1",
-      "code": "WELCOME10",
-      "description": "تخفیف 10% برای اولین خرید",
-      "discount": 10,
-      "type": "percent",
-      "maxUses": 100,
-      "usedCount": 0,
-      "active": true,
-      "expiryDate": "2025-12-31"
-    }
+    { "id": "1", "code": "WELCOME10", "description": "تخفیف 10% برای اولین خرید", "discount": 10, "type": "percent", "maxUses": 100, "usedCount": 0, "active": true, "expiryDate": "2099-12-31" }
   ],
   "tickets": [],
   "transactions": [],
-  "serverStats": {
-    "players": 42,
-    "stability": 99.9,
-    "sales": 1250,
-    "support": 24,
-    "status": "online"
-  }
+  "serverStats": { "players": 42, "stability": 99.9, "sales": 1250, "support": 24, "status": "online" }
 }
