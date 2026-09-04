@@ -1,0 +1,15 @@
+﻿{
+  "name": "binercraft-backend",
+  "version": "1.0.0",
+  "description": "BinerCraft Minecraft server backend",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "json-server": "^0.17.4"
+  }
+}
