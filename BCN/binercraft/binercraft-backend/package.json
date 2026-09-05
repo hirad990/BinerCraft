@@ -1,11 +1,11 @@
-﻿{
+{
   "name": "binercraft-backend",
   "version": "1.0.0",
   "description": "BinerCraft Minecraft server backend",
   "main": "server.js",
   "scripts": {
-    "dev": "node server.js",
-    "start": "node server.js"
+    "dev": "node --env-file=.env server.js",
+    "start": "node --env-file=.env server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
