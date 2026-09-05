@@ -4,42 +4,7 @@ import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 
 export default function LoginPage() {
-  const [identifier, setIdentifier] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const navigate = useNavigate()
-  const shouldReduceMotion = useReducedMotion()
-
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    setError('')
-    setLoading(true)
-    try {
-      const { data } = await axios.post('/api/users/login', { identifier, password })
-      localStorage.setItem('user', JSON.stringify(data.user))
-      window.dispatchEvent(new Event('binercraft-auth-changed'))
-      navigate('/')
-    } catch (requestError) {
-      setError(requestError.response?.data?.error || 'ورود انجام نشد. دوباره تلاش کنید.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <div className="container mx-auto max-w-md px-4 py-10">
-      <motion.div initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card">
-        <h1 className="text-3xl font-bold mb-2">ورود به BinerCraft</h1>
-        <p className="text-text-secondary mb-6">با حساب کاربری خود وارد شوید.</p>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <label className="block"><span className="text-sm font-medium">نام کاربری یا ایمیل</span><input value={identifier} onChange={(event) => setIdentifier(event.target.value)} required className="mt-2 w-full rounded-xl border border-glass-border bg-transparent px-4 py-3 outline-none focus:ring-2 focus:ring-primary-500" autoComplete="username" /></label>
-          <label className="block"><span className="text-sm font-medium">رمز عبور</span><input type="password" value={password} onChange={(event) => setPassword(event.target.value)} required className="mt-2 w-full rounded-xl border border-glass-border bg-transparent px-4 py-3 outline-none focus:ring-2 focus:ring-primary-500" autoComplete="current-password" /></label>
-          {error && <div role="alert" className="rounded-xl bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-500">{error}</div>}
-          <button type="submit" disabled={loading} className="w-full rounded-xl bg-primary-600 px-4 py-3 font-semibold text-white transition hover:bg-primary-700 disabled:opacity-50">{loading ? 'در حال ورود…' : 'ورود'}</button>
-        </form>
-        <p className="mt-6 text-sm text-text-secondary">حساب ندارید؟ <Link to="/register" className="text-primary-600 dark:text-primary-400 hover:underline">ثبت‌نام کنید</Link></p>
-      </motion.div>
-    </div>
-  )
+  const [identifier, setIdentifier] = useState(''); const [password, setPassword] = useState(''); const [loading, setLoading] = useState(false); const [error, setError] = useState(''); const navigate = useNavigate(); const reduceMotion = useReducedMotion()
+  const submit = async (e) => { e.preventDefault(); setError(''); setLoading(true); try { const { data } = await axios.post('/api/users/login', { identifier, password }); localStorage.setItem('user', JSON.stringify(data.user)); window.dispatchEvent(new Event('binercraft-auth-changed')); navigate('/') } catch (err) { setError(err.response?.data?.error || 'ورود انجام نشد. دوباره تلاش کنید.') } finally { setLoading(false) } }
+  return <main className="container mx-auto max-w-5xl px-4 py-10 sm:py-16"><motion.div initial={reduceMotion ? false : { opacity: 0, scale: .98 }} animate={{ opacity: 1, scale: 1 }} className="mx-auto grid overflow-hidden rounded-3xl border border-glass-border bg-glass-bg shadow-2xl md:grid-cols-2"><div className="hidden bg-primary-600 p-10 text-white md:flex md:flex-col md:justify-between"><div><div className="text-5xl">⛏️</div><h2 className="mt-8 text-4xl font-black">به BinerCraft برگرد.</h2><p className="mt-4 leading-8 text-white/75">حساب تو، فروشگاه و تجربه‌ی بازی در یکجا.</p></div><div className="rounded-2xl border border-white/15 bg-white/10 p-4 text-sm">شبکه همیشه آماده‌ی ماجراجویی توست.</div></div><div className="p-6 sm:p-10"><span className="text-sm font-bold text-primary-600 dark:text-primary-400">WELCOME BACK</span><h1 className="mt-2 text-3xl font-black">ورود به حساب</h1><p className="mt-2 text-text-secondary">نام کاربری یا ایمیل و رمزت را وارد کن.</p><form onSubmit={submit} className="mt-7 space-y-5"><label className="block"><span className="text-sm font-bold">نام کاربری یا ایمیل</span><input value={identifier} onChange={(e) => setIdentifier(e.target.value)} required autoComplete="username" className="input-field mt-2 w-full" placeholder="Username یا email" /></label><label className="block"><span className="text-sm font-bold">رمز عبور</span><input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" className="input-field mt-2 w-full" placeholder="••••••••" /></label>{error && <div role="alert" className="rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-500">{error}</div>}<button disabled={loading} className="w-full rounded-xl bg-primary-600 px-4 py-3.5 font-black text-white transition hover:bg-primary-700 disabled:opacity-50">{loading ? 'در حال ورود…' : 'ورود به حساب'}</button></form><p className="mt-6 text-sm text-text-secondary">حساب نداری؟ <Link to="/register" className="font-bold text-primary-600 dark:text-primary-400">ثبت‌نام کن</Link></p></div></motion.div></main>
 }
