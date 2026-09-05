@@ -2,65 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --border-color: #e2e8f0;
-  --glass-bg: rgba(255, 255, 255, 0.72);
-  --glass-border: rgba(148, 163, 184, 0.28);
-  --shadow-color: rgba(15, 23, 42, 0.08);
-}
-
-.dark {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --border-color: #334155;
-  --glass-bg: rgba(15, 23, 42, 0.72);
-  --glass-border: rgba(148, 163, 184, 0.16);
-  --shadow-color: rgba(0, 0, 0, 0.35);
-}
-
-* { box-sizing: border-box; }
-html { min-width: 320px; scroll-behavior: smooth; }
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  font-family: 'Noto Sans Arabic', 'Segoe UI', sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  transition: background-color 0.25s ease, color 0.25s ease;
-  direction: rtl;
-  text-rendering: optimizeLegibility;
-}
-button, input, textarea, select { font: inherit; }
-button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
-
-.glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px var(--shadow-color);
-}
-
+:root { --bg-primary:#f8fafc; --bg-secondary:#fff; --text-primary:#1e293b; --text-secondary:#64748b; --border-color:#e2e8f0; --glass-bg:rgba(255,255,255,.72); --glass-border:rgba(148,163,184,.28); --shadow-color:rgba(15,23,42,.08); }
+.dark { --bg-primary:#0f172a; --bg-secondary:#1e293b; --text-primary:#f1f5f9; --text-secondary:#94a3b8; --border-color:#334155; --glass-bg:rgba(15,23,42,.72); --glass-border:rgba(148,163,184,.16); --shadow-color:rgba(0,0,0,.35); }
+* { box-sizing:border-box; }
+html { min-width:320px; scroll-behavior:smooth; }
+body { margin:0; min-width:320px; min-height:100vh; font-family:'Noto Sans Arabic','Segoe UI',sans-serif; background:var(--bg-primary); color:var(--text-primary); transition:background-color .25s ease,color .25s ease; direction:rtl; text-rendering:optimizeLegibility; }
+button,input,textarea,select { font:inherit; }
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible { outline:2px solid #3b82f6; outline-offset:2px; }
+.glass { background:var(--glass-bg); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid var(--glass-border); box-shadow:0 8px 32px var(--shadow-color); }
 .glass-card { @apply glass rounded-2xl p-6 transition-all duration-300 hover:shadow-xl; }
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-primary); }
-::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: #2563eb; }
-
-@media (max-width: 640px) {
-  .glass-card { @apply p-4 rounded-xl; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-}
+.input-field { @apply rounded-xl border border-glass-border bg-transparent px-4 py-3 text-text-primary outline-none transition focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20; }
+.scrollbar-hide::-webkit-scrollbar { display:none; }
+.scrollbar-hide { -ms-overflow-style:none; scrollbar-width:none; }
+::-webkit-scrollbar { width:8px; height:8px; }
+::-webkit-scrollbar-track { background:var(--bg-primary); }
+::-webkit-scrollbar-thumb { background:#3b82f6; border-radius:9999px; }
+::-webkit-scrollbar-thumb:hover { background:#2563eb; }
+@media (max-width:640px) { .glass-card { @apply p-4 rounded-xl; } }
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
