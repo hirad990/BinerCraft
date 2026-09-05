@@ -2,55 +2,5 @@
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
-
-  return (
-    <footer className="glass border-t border-glass-border mt-auto">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="font-rubik text-xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent mb-4">
-              BinerCraft
-            </h3>
-            <p className="text-text-secondary text-sm">
-              سرور ماینکرفت با گیم‌مودهای متنوع و جامعه بزرگ
-            </p>
-          </div>
-
-          <div>
-            <h4 className="font-semibold mb-3">لینک‌های سریع</h4>
-            <ul className="space-y-2 text-sm text-text-secondary">
-              <li><Link to="/" className="hover:text-primary-600 transition-colors">خانه</Link></li>
-              <li><Link to="/shop" className="hover:text-primary-600 transition-colors">فروشگاه</Link></li>
-              <li><Link to="/blog" className="hover:text-primary-600 transition-colors">وبلاگ</Link></li>
-              <li><Link to="/rules" className="hover:text-primary-600 transition-colors">قوانین</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold mb-3">پشتیبانی</h4>
-            <ul className="space-y-2 text-sm text-text-secondary">
-              <li><Link to="/guide" className="hover:text-primary-600 transition-colors">راهنما</Link></li>
-              <li><Link to="/support" className="hover:text-primary-600 transition-colors">پشتیبانی</Link></li>
-              <li><Link to="/faq" className="hover:text-primary-600 transition-colors">سوالات متداول</Link></li>
-              <li><Link to="/contact" className="hover:text-primary-600 transition-colors">تماس با ما</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold mb-3">شبکه‌های اجتماعی</h4>
-            <div className="flex gap-4">
-              <a href="#" className="text-2xl hover:text-primary-600 transition-colors">📺</a>
-              <a href="#" className="text-2xl hover:text-primary-600 transition-colors">🐦</a>
-              <a href="#" className="text-2xl hover:text-primary-600 transition-colors">📷</a>
-              <a href="#" className="text-2xl hover:text-primary-600 transition-colors">🎮</a>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t border-glass-border mt-8 pt-6 text-center text-sm text-text-secondary">
-          © {currentYear} BinerCraft.ir | تمامی حقوق محفوظ است
-        </div>
-      </div>
-    </footer>
-  )
+  return <footer className="relative mt-16 overflow-hidden border-t border-glass-border bg-glass-bg/60"><div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(59,130,246,.12),transparent_35%)]" /><div className="container relative mx-auto px-4 py-14"><div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]"><div><Link to="/" className="inline-flex items-center gap-2 text-2xl font-black"><span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-primary-500 to-purple-600 text-white">⛏</span><span className="bg-gradient-to-l from-primary-500 to-purple-500 bg-clip-text text-transparent">BinerCraft</span></Link><p className="mt-5 max-w-sm leading-8 text-text-secondary">شبکه‌ای برای ساختن، رقابت کردن و تجربه‌ی بهترین لحظه‌های ماینکرفت.</p><div className="mt-6 inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-600 dark:text-emerald-300">● سرویس‌ها پایدار و آنلاین</div></div><div><h3 className="mb-5 font-bold">دسترسی سریع</h3><div className="space-y-3 text-sm text-text-secondary"><Link className="block transition hover:text-primary-500" to="/">خانه</Link><Link className="block transition hover:text-primary-500" to="/shop">فروشگاه</Link><Link className="block transition hover:text-primary-500" to="/profile">حساب کاربری</Link><Link className="block transition hover:text-primary-500" to="/support">پشتیبانی</Link></div></div><div><h3 className="mb-5 font-bold">راهنما</h3><div className="space-y-3 text-sm text-text-secondary"><Link className="block transition hover:text-primary-500" to="/guide">شروع بازی</Link><Link className="block transition hover:text-primary-500" to="/rules">قوانین شبکه</Link><Link className="block transition hover:text-primary-500" to="/faq">سوالات متداول</Link><Link className="block transition hover:text-primary-500" to="/contact">تماس با ما</Link></div></div><div><h3 className="mb-5 font-bold">ارتباط با ما</h3><p className="text-sm leading-8 text-text-secondary">برای هر سوال یا مشکل، تیم پشتیبانی در کنار شماست.</p><Link to="/support" className="mt-5 inline-flex rounded-xl bg-primary-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-primary-700">ارسال تیکت ←</Link></div></div><div className="mt-12 flex flex-col gap-3 border-t border-glass-border pt-6 text-sm text-text-secondary md:flex-row md:items-center md:justify-between"><span>© {currentYear} BinerCraft.ir</span><span>ساخته‌شده برای جامعه‌ی ماینکرفت</span></div></div></footer>
 }
