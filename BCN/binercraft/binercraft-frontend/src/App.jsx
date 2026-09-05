@@ -4,6 +4,8 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
 import HomePage from './pages/HomePage.jsx'
+import LauncherPage from './pages/LauncherPage.jsx'
+import HomePage from './pages/HomePage.jsx'
 import ShopPage from './pages/ShopPage.jsx'
 import ProductDetailPage from './pages/ProductDetailPage.jsx'
 import BlogPage from './pages/BlogPage.jsx'
@@ -23,11 +25,14 @@ import GuidePage from './pages/GuidePage.jsx'
 import SupportPage from './pages/SupportPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import FaqPage from './pages/FaqPage.jsx'
-import LauncherPage from './pages/LauncherPage.jsx'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
-  useEffect(() => window.scrollTo({ top: 0, behavior: 'auto' }), [pathname])
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' })
+  }, [pathname])
+
   return null
 }
 
