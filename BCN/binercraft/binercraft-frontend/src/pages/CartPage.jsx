@@ -5,30 +5,7 @@ import { useCart } from '../context/CartContext.jsx'
 const formatPrice = (value) => `${Number(value || 0).toLocaleString('fa-IR')} تومان`
 
 export default function CartPage() {
-  const { cart, loading, error, updateQuantity, removeFromCart, clearCart, getTotalPrice } = useCart()
-  const shouldReduceMotion = useReducedMotion()
-
-  return (
-    <div className="container mx-auto max-w-4xl px-4 py-8">
-      <motion.div initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center justify-between gap-4 mb-6"><div><h1 className="text-3xl font-extrabold">سبد خرید</h1><p className="text-text-secondary mt-1">محصولات انتخاب‌شده شما</p></div><Link to="/shop" className="text-primary-600 dark:text-primary-400 hover:underline">ادامه خرید</Link></div>
-        {error && <div role="alert" className="mb-4 rounded-xl bg-red-500/10 border border-red-500/20 p-4 text-red-500">{error}</div>}
-        {cart.length === 0 ? (
-          <div className="glass-card text-center py-14"><div className="text-5xl mb-4">🛒</div><h2 className="text-xl font-bold">سبد خرید خالی است</h2><p className="text-text-secondary mt-2 mb-6">از فروشگاه یک محصول انتخاب کنید.</p><Link to="/shop" className="inline-flex rounded-xl bg-primary-600 text-white px-5 py-3 hover:bg-primary-700 transition">رفتن به فروشگاه</Link></div>
-        ) : (
-          <div className="space-y-4">
-            {cart.map((item) => (
-              <div key={item.id} className="glass-card flex flex-col sm:flex-row sm:items-center gap-4 p-4">
-                <div className="flex-1"><h2 className="font-bold">{item.product?.name || `محصول ${item.productId}`}</h2><p className="text-sm text-text-secondary mt-1">{formatPrice(item.product?.price)}</p></div>
-                <div className="flex items-center gap-2"><button type="button" disabled={loading} onClick={() => updateQuantity(item.id, item.quantity - 1)} className="w-9 h-9 rounded-lg glass hover:bg-glass-bg">−</button><span className="w-8 text-center">{item.quantity}</span><button type="button" disabled={loading} onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-9 h-9 rounded-lg glass hover:bg-glass-bg">+</button></div>
-                <strong className="sm:w-32 sm:text-left">{formatPrice((item.product?.price || 0) * item.quantity)}</strong>
-                <button type="button" disabled={loading} onClick={() => removeFromCart(item.id)} className="text-red-500 hover:text-red-600">حذف</button>
-              </div>
-            ))}
-            <div className="glass-card flex flex-col sm:flex-row sm:items-center justify-between gap-4"><div><p className="text-sm text-text-secondary">مبلغ کل</p><p className="text-2xl font-extrabold mt-1">{formatPrice(getTotalPrice())}</p></div><div className="flex gap-2"><button type="button" disabled={loading} onClick={clearCart} className="rounded-xl px-4 py-3 border border-red-500/30 text-red-500 hover:bg-red-500/10">خالی کردن</button><button type="button" className="rounded-xl bg-primary-600 text-white px-5 py-3 hover:bg-primary-700 transition">ادامه پرداخت</button></div></div>
-          </div>
-        )}
-      </motion.div>
-    </div>
-  )
+  const { cart, loading, error, updateQuantity, removeFromCart, clearCart, getTotalPrice, getTotalItems } = useCart()
+  const reduceMotion = useReducedMotion()
+  return <main className="container mx-auto max-w-6xl px-4 py-10 sm:py-14"><motion.div initial={reduceMotion ? false : { opacity:0,y:18 }} animate={{ opacity:1,y:0 }}><div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><span className="font-bold text-primary-600 dark:text-primary-400">YOUR INVENTORY</span><h1 className="mt-2 text-4xl font-black">سبد خرید</h1><p className="mt-2 text-text-secondary">{getTotalItems()} آیتم انتخاب شده</p></div><Link to="/shop" className="font-bold text-primary-600 dark:text-primary-400">← ادامه خرید</Link></div>{error && <div role="alert" className="mb-5 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-red-500">{error}</div>}{cart.length === 0 ? <div className="glass-card py-16 text-center"><div className="text-6xl">🛒</div><h2 className="mt-5 text-2xl font-black">سبد خرید خالیه</h2><p className="mt-2 text-text-secondary">محصولات ویژه BinerCraft منتظر تو هستند.</p><Link to="/shop" className="mt-6 inline-flex rounded-xl bg-primary-600 px-6 py-3 font-bold text-white">مشاهده فروشگاه</Link></div> : <div className="grid gap-6 lg:grid-cols-[1fr_340px]"><section className="space-y-3">{cart.map((item,index) => <motion.article key={item.id} initial={reduceMotion ? false : { opacity:0,x:10 }} animate={{ opacity:1,x:0 }} transition={{ delay:reduceMotion ? 0 : index*.04 }} className="glass-card flex flex-col gap-4 sm:flex-row sm:items-center"><div className="flex-1"><h2 className="font-black text-lg">{item.product?.name || `محصول ${item.productId}`}</h2><p className="mt-1 text-sm text-text-secondary">{formatPrice(item.product?.price)}</p></div><div className="flex items-center gap-2"><button disabled={loading} onClick={() => updateQuantity(item.id,item.quantity-1)} className="h-9 w-9 rounded-lg border border-glass-border">−</button><span className="w-8 text-center font-bold">{item.quantity}</span><button disabled={loading} onClick={() => updateQuantity(item.id,item.quantity+1)} className="h-9 w-9 rounded-lg border border-glass-border">+</button></div><strong className="sm:w-36 sm:text-left">{formatPrice((item.product?.price || 0)*item.quantity)}</strong><button disabled={loading} onClick={() => removeFromCart(item.id)} className="text-sm font-bold text-red-500">حذف</button></motion.article>)}</section><aside className="glass-card h-fit lg:sticky lg:top-24"><p className="text-sm text-text-secondary">جمع سفارش</p><div className="mt-2 flex items-end justify-between gap-3"><span className="text-text-secondary">{getTotalItems()} آیتم</span><strong className="text-2xl font-black">{formatPrice(getTotalPrice())}</strong></div><button disabled={loading} className="mt-6 w-full rounded-xl bg-primary-600 px-4 py-3.5 font-black text-white transition hover:bg-primary-700 disabled:opacity-50">ادامه پرداخت</button><button disabled={loading} onClick={clearCart} className="mt-3 w-full rounded-xl border border-red-500/20 px-4 py-3 font-bold text-red-500 hover:bg-red-500/10">خالی کردن سبد</button><p className="mt-4 text-center text-xs leading-6 text-text-secondary">پرداخت امن و پیگیری سفارش از طریق حساب کاربری.</p></aside></div>}</motion.div></main>
 }
