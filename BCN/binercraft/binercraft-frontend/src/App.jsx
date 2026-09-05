@@ -23,6 +23,7 @@ import GuidePage from './pages/GuidePage.jsx'
 import SupportPage from './pages/SupportPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import FaqPage from './pages/FaqPage.jsx'
+import LauncherPage from './pages/LauncherPage.jsx'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -68,6 +69,7 @@ export default function App() {
               <Route path="/support" element={<SupportPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/faq" element={<FaqPage />} />
+              <Route path="/launcher" element={<LauncherPage />} />
               <Route path="*" element={<HomePage />} />
             </Routes>
           </motion.div>
