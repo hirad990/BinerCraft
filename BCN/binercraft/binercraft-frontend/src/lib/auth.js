@@ -25,18 +25,28 @@ export const refreshAuth = async () => {
   const token = getToken()
   if (!token) return null
 
-  const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
-    headers: { Authorization: `Bearer ${token}` },
-  })
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
 
-  if (!response.ok) {
-    removeToken()
+    if (!response.ok) {
+      removeToken()
+      return null
+    }
+
+    const payload = await response.json()
+    const user = payload?.user || payload
+    const normalized = user ? { ...user, token } : null
+
+    if (normalized) {
+      localStorage.setItem('user', JSON.stringify(normalized))
+    }
+
+    return normalized
+  } catch {
     return null
   }
-
-  const user = await response.json()
-  localStorage.setItem('user', JSON.stringify(user))
-  return user
 }
 
 export const authAPI = {
@@ -51,7 +61,7 @@ export const authAPI = {
     const data = await response.json()
     if (!response.ok) throw new Error(data.message || data.error || 'Login failed')
     if (data.token) saveToken(data.token)
-    if (data.user) localStorage.setItem('user', JSON.stringify(data.user))
+    if (data.user) localStorage.setItem('user', JSON.stringify({ ...data.user, token: data.token || getToken() }))
     return data
   },
 
@@ -64,7 +74,7 @@ export const authAPI = {
     const data = await response.json()
     if (!response.ok) throw new Error(data.message || data.error || 'Registration failed')
     if (data.token) saveToken(data.token)
-    if (data.user) localStorage.setItem('user', JSON.stringify(data.user))
+    if (data.user) localStorage.setItem('user', JSON.stringify({ ...data.user, token: data.token || getToken() }))
     return data
   },
 }
