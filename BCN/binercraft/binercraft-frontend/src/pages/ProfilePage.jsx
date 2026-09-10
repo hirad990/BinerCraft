@@ -9,15 +9,10 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
-    if (!userId) {
-      setLoading(false);
-      return;
-    }
-    axios.get(`${API_BASE}/wallet/${userId}`)
-      .then((response) => setWallet(response.data))
-      .catch((error) => console.error('Failed to load wallet:', error))
-      .finally(() => setLoading(false));
+    if (!userId) { setLoading(false); return; }
+    axios.get(`${API_BASE}/wallet/${userId}`).then(r => setWallet(r.data)).catch(console.error).finally(() => setLoading(false));
   }, []);
 
-  return null;
+  if (loading) return <div>Loading...</div>;
+  return <div>{wallet ? JSON.stringify(wallet) : 'No wallet data'}</div>;
 }
