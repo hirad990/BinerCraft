@@ -1,4 +1,4 @@
-﻿import React from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import axios from 'axios'
@@ -10,8 +10,6 @@ import './styles/index.css'
 const API_ORIGIN = 'https://binercraft.ir'
 const API_PREFIX = '/fozing'
 
-// Normalize every axios request so legacy /api/... calls become /fozing/api/...
-// while already-correct /fozing/api/... requests remain unchanged.
 axios.defaults.baseURL = API_ORIGIN
 axios.interceptors.request.use((config) => {
   const url = config.url || ''
@@ -21,7 +19,6 @@ axios.interceptors.request.use((config) => {
   return config
 })
 
-// A number of pages use native fetch instead of axios. Normalize those too.
 const nativeFetch = window.fetch.bind(window)
 window.fetch = (input, init) => {
   if (typeof input === 'string' && input.startsWith('/api/')) {
