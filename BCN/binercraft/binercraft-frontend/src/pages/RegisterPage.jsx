@@ -2,10 +2,57 @@ import { useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
+import { saveToken } from '../lib/auth'
 
 export default function RegisterPage() {
-  const [form, setForm] = useState({ username: '', email: '', displayName: '', password: '', confirmPassword: '' }); const [loading, setLoading] = useState(false); const [error, setError] = useState(''); const navigate = useNavigate(); const reduceMotion = useReducedMotion()
+  const [form, setForm] = useState({ username: '', email: '', displayName: '', password: '', confirmPassword: '' })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
+  const reduceMotion = useReducedMotion()
   const update = (key) => (e) => setForm((v) => ({ ...v, [key]: e.target.value }))
-  const submit = async (e) => { e.preventDefault(); setError(''); if (form.password !== form.confirmPassword) return setError('تکرار رمز عبور یکسان نیست.'); setLoading(true); try { const { data } = await axios.post('/api/users/register', { username: form.username, email: form.email, displayName: form.displayName || form.username, password: form.password }); if (data.token) localStorage.setItem('token', data.token); localStorage.setItem('user', JSON.stringify(data.user || data)); window.dispatchEvent(new Event('binercraft-auth-changed')); navigate('/') } catch (err) { setError(err.response?.data?.error || 'ثبت‌نام انجام نشد. دوباره تلاش کنید.') } finally { setLoading(false) } }
+
+  const submit = async (e) => {
+    e.preventDefault()
+    setError('')
+
+    if (form.password !== form.confirmPassword) {
+      setError('تکرار رمز عبور یکسان نیست.')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const { data: registerData } = await axios.post('/api/users/register', {
+        username: form.username,
+        email: form.email,
+        displayName: form.displayName || form.username,
+        password: form.password,
+      })
+
+      // The backend currently creates the account but does not issue a token.
+      // Immediately authenticate with the same credentials so registration ends
+      // with a normal authenticated session.
+      const { data: loginData } = await axios.post('/api/users/login', {
+        identifier: form.username,
+        password: form.password,
+      })
+
+      if (!loginData?.token) {
+        throw new Error('حساب ساخته شد، اما سرور توکن ورود را ایجاد نکرد.')
+      }
+
+      saveToken(loginData.token)
+      const user = loginData.user || registerData?.user || registerData
+      localStorage.setItem('user', JSON.stringify({ ...user, token: loginData.token }))
+      window.dispatchEvent(new Event('binercraft-auth-changed'))
+      navigate('/')
+    } catch (err) {
+      setError(err.response?.data?.error || err.message || 'ثبت‌نام انجام نشد. دوباره تلاش کنید.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return <main className="container mx-auto max-w-5xl px-4 py-10 sm:py-14"><motion.div initial={reduceMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="mx-auto grid overflow-hidden rounded-3xl border border-glass-border bg-glass-bg shadow-2xl md:grid-cols-2"><div className="hidden bg-primary-600 p-10 text-white md:block"><div className="text-5xl">⛏️</div><h2 className="mt-10 text-4xl font-black">ماجراجویی از اینجا شروع می‌شود.</h2><p className="mt-4 leading-8 text-white/75">یک حساب بساز و وارد دنیای BinerCraft شو.</p></div><div className="p-6 sm:p-10"><span className="text-sm font-bold text-primary-600 dark:text-primary-400">JOIN BINERCRAFT</span><h1 className="mt-2 text-3xl font-black">ساخت حساب</h1><p className="mt-2 text-text-secondary">اطلاعاتت را وارد کن؛ بقیه‌اش با ما.</p><form onSubmit={submit} className="mt-7 space-y-4"><label className="block"><span className="text-sm font-bold">نام کاربری</span><input value={form.username} onChange={update('username')} required minLength={3} pattern="[_a-zA-Z0-9-]+" autoComplete="username" className="input-field mt-2 w-full" /></label><label className="block"><span className="text-sm font-bold">ایمیل</span><input type="email" value={form.email} onChange={update('email')} required autoComplete="email" className="input-field mt-2 w-full" /></label><label className="block"><span className="text-sm font-bold">نام نمایشی <span className="text-text-secondary font-normal">(اختیاری)</span></span><input value={form.displayName} onChange={update('displayName')} className="input-field mt-2 w-full" /></label><div className="grid gap-4 sm:grid-cols-2"><label className="block"><span className="text-sm font-bold">رمز عبور</span><input type="password" value={form.password} onChange={update('password')} required minLength={8} autoComplete="new-password" className="input-field mt-2 w-full" /></label><label className="block"><span className="text-sm font-bold">تکرار رمز</span><input type="password" value={form.confirmPassword} onChange={update('confirmPassword')} required minLength={8} autoComplete="new-password" className="input-field mt-2 w-full" /></label></div>{error && <div role="alert" className="rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-500">{error}</div>}<button disabled={loading} className="w-full rounded-xl bg-primary-600 px-4 py-3.5 font-black text-white transition hover:bg-primary-700 disabled:opacity-50">{loading ? 'در حال ساخت حساب…' : 'ساخت حساب'}</button></form><p className="mt-6 text-sm text-text-secondary">قبلاً حساب ساخته‌ای؟ <Link to="/login" className="font-bold text-primary-600 dark:text-primary-400">وارد شو</Link></p></div></motion.div></main>
 }
