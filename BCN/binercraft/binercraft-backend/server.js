@@ -41,7 +41,14 @@ function requireAuth(req, res, next) { const h = String(req.headers.authorizatio
 function requireAdmin(req, res, next) { return requireAuth(req, res, () => req.auth.role === 'admin' ? next() : res.status(403).json({ error: 'Admin access required' })) }
 function save(res, db, payload, code = 200) { if (!writeDB(db)) return res.status(500).json({ error: 'Could not save data' }); return res.status(code).json(payload) }
 
-app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'BinerCraft Backend', timestamp: new Date().toISOString() }))
+const healthResponse = (req, res) => res.json({ status: 'ok', service: 'BinerCraft Backend', timestamp: new Date().toISOString() })
+app.get('/', healthResponse)
+app.get('/health', healthResponse)
+app.get('/fozing', healthResponse)
+app.get('/fozing/health', healthResponse)
+app.get('/api/health', healthResponse)
+app.get('/fozing/api/health', healthResponse)
+
 app.post('/api/auth/admin/login', (req, res) => { if (!ADMIN_PASSWORD || !AUTH_SECRET) return res.status(503).json({ error: 'Admin authentication is not configured' }); const username = String(req.body.username || req.body.identifier || '').trim().toLowerCase(); if (username !== ADMIN_USERNAME || String(req.body.password || '') !== ADMIN_PASSWORD) return res.status(401).json({ error: 'Invalid admin credentials' }); const db = readDB(); let admin = db.users.find((u) => u.role === 'admin' && String(u.username || '').toLowerCase() === ADMIN_USERNAME); if (!admin) { admin = { id: generateId(), username: ADMIN_USERNAME, email: `${ADMIN_USERNAME}@binercraft.ir`, displayName: 'مدیر BinerCraft', role: 'admin', wallet: 0, avatar: '' }; db.users.push(admin); writeDB(db) } const token = signToken({ sub: String(admin.id), username: admin.username, role: 'admin', exp: Math.floor(Date.now() / 1000) + 43200 }); res.json({ token, user: sanitizeUser(admin) }) })
 app.post('/api/users/register', (req, res) => { const db = readDB(); const username = String(req.body.username || '').trim(); const email = String(req.body.email || '').trim().toLowerCase(); const password = String(req.body.password || ''); const displayName = String(req.body.displayName || username).trim(); if (username.length < 3 || !/^[-_a-zA-Z0-9]+$/.test(username)) return res.status(400).json({ error: 'Invalid username' }); if (!/^\S+@\S+\.\S+$/.test(email)) return res.status(400).json({ error: 'Invalid email' }); if (password.length < 8) return res.status(400).json({ error: 'Password must contain at least 8 characters' }); if (db.users.some((u) => u.username?.toLowerCase() === username.toLowerCase())) return res.status(409).json({ error: 'Username already exists' }); if (db.users.some((u) => u.email?.toLowerCase() === email)) return res.status(409).json({ error: 'Email already exists' }); const user = { id: generateId(), username, email, displayName: displayName || username, role: 'user', wallet: 0, avatar: '', passwordHash: hashPassword(password), createdAt: new Date().toISOString() }; db.users.push(user); return save(res, db, sanitizeUser(user), 201) })
 app.post('/api/users/login', (req, res) => { const db = readDB(); const identifier = String(req.body.identifier || req.body.username || req.body.email || '').trim().toLowerCase(); const user = db.users.find((u) => u.username?.toLowerCase() === identifier || u.email?.toLowerCase() === identifier); if (!user || !verifyPassword(String(req.body.password || ''), user.passwordHash)) return res.status(401).json({ error: 'Invalid username/email or password' }); const token = AUTH_SECRET ? signToken({ sub: String(user.id), username: user.username, role: user.role || 'user', exp: Math.floor(Date.now() / 1000) + 43200 }) : null; res.json({ user: sanitizeUser(user), ...(token ? { token } : {}) }) })
@@ -73,6 +80,6 @@ app.post('/api/cart', (req, res) => { const db = readDB(); const userId = String
 app.patch('/api/cart/:id', (req, res) => { const db = readDB(); const i = db.cart.findIndex((item) => String(item.id) === String(req.params.id)); if (i < 0) return res.status(404).json({ error: 'Cart item not found' }); db.cart[i] = { ...db.cart[i], quantity: Math.max(1, Number(req.body.quantity || 1)) }; return save(res, db, db.cart[i]) })
 app.delete('/api/cart/:id', (req, res) => { const db = readDB(); db.cart = db.cart.filter((item) => String(item.id) !== String(req.params.id)); writeDB(db); res.status(204).send() })
 
-app.use((req, res) => res.status(404).json({ error: 'Route not found', path: req.path }))
+app.use((req, res) => res.status(404).json({ error: 'Route not found', path: req.originalUrl || req.path }))
 
 app.listen(PORT, () => console.log(`BinerCraft backend listening on port ${PORT}`))
