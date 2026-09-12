@@ -8,68 +8,50 @@ import { CartProvider } from './context/CartContext.jsx'
 import './styles/index.css'
 
 const API_ORIGIN = 'https://binercraft.ir'
-const API_PREFIX = '/fozing'
+const API_PREFIX = '/loloh'
 const API_BASE_URL = `${API_ORIGIN}${API_PREFIX}`
 const LOCAL_API_ORIGINS = new Set(['http://localhost:3000', 'http://127.0.0.1:3000'])
+const OLD_API_PREFIXES = ['/fozing']
 
 const normalizeApiUrl = (value) => {
   if (!value) return value
-
   try {
     const url = new URL(value, window.location.origin)
-
-    if (LOCAL_API_ORIGINS.has(url.origin) && url.pathname.startsWith('/api/')) {
-      return `${API_BASE_URL}${url.pathname}${url.search}${url.hash}`
+    const isApiPath = url.pathname === '/api' || url.pathname.startsWith('/api/')
+    const isOldApiPath = OLD_API_PREFIXES.some((prefix) => url.pathname === prefix || url.pathname.startsWith(`${prefix}/`))
+    if ((LOCAL_API_ORIGINS.has(url.origin) || url.origin === window.location.origin) && isApiPath) {
+      return `${API_BASE_URL}${url.pathname === '/api' ? '' : url.pathname.slice(4)}${url.search}${url.hash}`
     }
-
-    if (url.origin === window.location.origin && url.pathname.startsWith('/api/')) {
-      return `${API_BASE_URL}${url.pathname}${url.search}${url.hash}`
+    if (url.origin === API_ORIGIN && isOldApiPath) {
+      const path = url.pathname.replace(/^\/fozing(?=\/|$)/, '')
+      return `${API_BASE_URL}${path}${url.search}${url.hash}`
     }
-
-    if (url.origin === API_ORIGIN && url.pathname.startsWith(`${API_PREFIX}/`)) {
-      return url.toString()
-    }
-  } catch {
-    // Keep invalid/non-URL values unchanged and let the caller handle them.
-  }
-
-  if (value.startsWith('/api/')) return `${API_BASE_URL}${value}`
+    if (url.origin === API_ORIGIN && (url.pathname === API_PREFIX || url.pathname.startsWith(`${API_PREFIX}/`))) return url.toString()
+  } catch {}
+  if (value === '/api' || value.startsWith('/api/')) return `${API_BASE_URL}${value === '/api' ? '' : value.slice(4)}`
   return value
 }
 
 axios.defaults.baseURL = API_ORIGIN
 axios.interceptors.request.use((config) => {
-  const url = config.url || ''
-  const normalized = normalizeApiUrl(url)
-
-  if (normalized !== url) {
-    if (normalized.startsWith(API_BASE_URL)) {
-      config.baseURL = ''
-      config.url = normalized
-    } else {
-      config.url = normalized
-    }
-  } else if (url.startsWith('/api/')) {
-    config.url = `${API_PREFIX}${url}`
+  const normalized = normalizeApiUrl(config.url || '')
+  if (normalized && normalized !== config.url) {
+    config.baseURL = ''
+    config.url = normalized
+  } else if ((config.url || '').startsWith('/api/')) {
+    config.baseURL = API_ORIGIN
+    config.url = `${API_PREFIX}${config.url}`
   }
-
   return config
 })
 
 const nativeFetch = window.fetch.bind(window)
 window.fetch = (input, init) => {
-  if (typeof input === 'string') {
-    const normalized = normalizeApiUrl(input)
-    return nativeFetch(normalized, init)
-  }
-
+  if (typeof input === 'string') return nativeFetch(normalizeApiUrl(input), init)
   if (input instanceof Request) {
     const normalized = normalizeApiUrl(input.url)
-    if (normalized !== input.url) {
-      return nativeFetch(normalized, init || input)
-    }
+    if (normalized !== input.url) return nativeFetch(new Request(normalized, input), init)
   }
-
   return nativeFetch(input, init)
 }
 
