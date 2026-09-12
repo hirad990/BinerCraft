@@ -20,15 +20,16 @@ const normalizeApiUrl = (value) => {
     const isApiPath = url.pathname === '/api' || url.pathname.startsWith('/api/')
     const isOldApiPath = OLD_API_PREFIXES.some((prefix) => url.pathname === prefix || url.pathname.startsWith(`${prefix}/`))
     if ((LOCAL_API_ORIGINS.has(url.origin) || url.origin === window.location.origin) && isApiPath) {
-      return `${API_BASE_URL}${url.pathname === '/api' ? '' : url.pathname.slice(4)}${url.search}${url.hash}`
+      return `${API_BASE_URL}${url.pathname === '/api' ? '/api' : url.pathname}${url.search}${url.hash}`
     }
     if (url.origin === API_ORIGIN && isOldApiPath) {
-      const path = url.pathname.replace(/^\/fozing(?=\/|$)/, '')
+      const path = url.pathname.replace(/^\/fozing(?=\/|$)/, '') || '/'
       return `${API_BASE_URL}${path}${url.search}${url.hash}`
     }
     if (url.origin === API_ORIGIN && (url.pathname === API_PREFIX || url.pathname.startsWith(`${API_PREFIX}/`))) return url.toString()
   } catch {}
-  if (value === '/api' || value.startsWith('/api/')) return `${API_BASE_URL}${value === '/api' ? '' : value.slice(4)}`
+  if (value === '/api' || value.startsWith('/api/')) return `${API_BASE_URL}${value}`
+  if (value === '/fozing' || value.startsWith('/fozing/')) return `${API_BASE_URL}${value.replace(/^\/fozing/, '')}`
   return value
 }
 
