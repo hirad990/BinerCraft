@@ -1,19 +1,17 @@
 {
   "name": "binercraft-backend",
-  "version": "2.1.0",
-  "description": "Professional BinerCraft backend with MySQL/MariaDB",
+  "version": "2.1.1",
+  "description": "BinerCraft backend with JSON storage",
   "main": "server.js",
   "scripts": {
-    "dev": "node --env-file=.env server.js",
-    "start": "node --env-file=.env server.js",
-    "migrate:json": "node --env-file=.env migrate-json.js"
+    "dev": "node server.js",
+    "start": "node server.js"
   },
   "engines": {
-    "node": ">=20.6.0"
+    "node": ">=18"
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.21.2",
-    "mysql2": "^3.14.3"
+    "express": "^4.21.2"
   }
 }
