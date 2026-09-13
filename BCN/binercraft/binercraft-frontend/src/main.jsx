@@ -11,25 +11,18 @@ const API_ORIGIN = 'https://binercraft.ir'
 const API_PREFIX = '/loloh'
 const API_BASE_URL = `${API_ORIGIN}${API_PREFIX}`
 const LOCAL_API_ORIGINS = new Set(['http://localhost:3000', 'http://127.0.0.1:3000'])
-const OLD_API_PREFIXES = ['/fozing']
 
 const normalizeApiUrl = (value) => {
   if (!value) return value
   try {
     const url = new URL(value, window.location.origin)
     const isApiPath = url.pathname === '/api' || url.pathname.startsWith('/api/')
-    const isOldApiPath = OLD_API_PREFIXES.some((prefix) => url.pathname === prefix || url.pathname.startsWith(`${prefix}/`))
     if ((LOCAL_API_ORIGINS.has(url.origin) || url.origin === window.location.origin) && isApiPath) {
       return `${API_BASE_URL}${url.pathname === '/api' ? '/api' : url.pathname}${url.search}${url.hash}`
-    }
-    if (url.origin === API_ORIGIN && isOldApiPath) {
-      const path = url.pathname.replace(/^\/fozing(?=\/|$)/, '') || '/'
-      return `${API_BASE_URL}${path}${url.search}${url.hash}`
     }
     if (url.origin === API_ORIGIN && (url.pathname === API_PREFIX || url.pathname.startsWith(`${API_PREFIX}/`))) return url.toString()
   } catch {}
   if (value === '/api' || value.startsWith('/api/')) return `${API_BASE_URL}${value}`
-  if (value === '/fozing' || value.startsWith('/fozing/')) return `${API_BASE_URL}${value.replace(/^\/fozing/, '')}`
   return value
 }
 
