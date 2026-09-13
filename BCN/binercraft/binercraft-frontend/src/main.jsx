@@ -11,18 +11,29 @@ const API_ORIGIN = 'https://binercraft.ir'
 const API_PREFIX = '/loloh'
 const API_BASE_URL = `${API_ORIGIN}${API_PREFIX}`
 const LOCAL_API_ORIGINS = new Set(['http://localhost:3000', 'http://127.0.0.1:3000'])
+const LEGACY_API_PREFIX = '/fozing'
 
 const normalizeApiUrl = (value) => {
   if (!value) return value
   try {
     const url = new URL(value, window.location.origin)
     const isApiPath = url.pathname === '/api' || url.pathname.startsWith('/api/')
+    const isLegacyPath = url.pathname === LEGACY_API_PREFIX || url.pathname.startsWith(`${LEGACY_API_PREFIX}/`)
+
     if ((LOCAL_API_ORIGINS.has(url.origin) || url.origin === window.location.origin) && isApiPath) {
       return `${API_BASE_URL}${url.pathname === '/api' ? '/api' : url.pathname}${url.search}${url.hash}`
     }
+
+    if (url.origin === API_ORIGIN && isLegacyPath) {
+      const path = url.pathname.replace(new RegExp(`^${LEGACY_API_PREFIX}(?=/|$)`), '') || '/'
+      return `${API_BASE_URL}${path}${url.search}${url.hash}`
+    }
+
     if (url.origin === API_ORIGIN && (url.pathname === API_PREFIX || url.pathname.startsWith(`${API_PREFIX}/`))) return url.toString()
   } catch {}
+
   if (value === '/api' || value.startsWith('/api/')) return `${API_BASE_URL}${value}`
+  if (value === LEGACY_API_PREFIX || value.startsWith(`${LEGACY_API_PREFIX}/`)) return `${API_BASE_URL}${value.slice(LEGACY_API_PREFIX.length) || '/'}`
   return value
 }
 
@@ -36,6 +47,13 @@ axios.interceptors.request.use((config) => {
     config.baseURL = API_ORIGIN
     config.url = `${API_PREFIX}${config.url}`
   }
+
+  const token = localStorage.getItem('token')
+  if (token && !config.headers?.Authorization) {
+    config.headers = config.headers || {}
+    config.headers.Authorization = `Bearer ${token}`
+  }
+
   return config
 })
 
