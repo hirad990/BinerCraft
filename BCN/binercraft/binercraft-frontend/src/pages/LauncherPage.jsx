@@ -1,5 +1,9 @@
+import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { fetchLauncherPresence } from './launcher-presence.js'
+
+const DOWNLOAD_URL = 'https://binercraft.ir/cdn/Biner-Launcher-Setup-1.1.0.exe'
 
 const features = [
   { icon: '⚡', title: 'سریع و سبک', text: 'لانچ سریع، رابط سبک و تجربه‌ای روان برای شروع بازی.' },
@@ -14,6 +18,25 @@ const versions = ['1.21.11', '1.21.10', '1.21.8', '1.21', '1.20.6', '1.20.1', '1
 
 export default function LauncherPage() {
   const reduceMotion = useReducedMotion()
+  const [launcherUsers, setLauncherUsers] = useState(null)
+
+  useEffect(() => {
+    let alive = true
+    const refresh = async () => {
+      try {
+        const controller = new AbortController()
+        const timer = setTimeout(() => controller.abort(), 7000)
+        const count = await fetchLauncherPresence(controller.signal)
+        clearTimeout(timer)
+        if (alive) setLauncherUsers(count)
+      } catch {
+        if (alive) setLauncherUsers(null)
+      }
+    }
+    refresh()
+    const interval = setInterval(refresh, 10000)
+    return () => { alive = false; clearInterval(interval) }
+  }, [])
 
   return (
     <main className="relative overflow-hidden bg-slate-950 text-white">
@@ -35,11 +58,12 @@ export default function LauncherPage() {
               باینر لانچر، لانچر اختصاصی BinerCraft برای مدیریت نسخه‌ها، اجرای سریع Minecraft و اتصال راحت‌تر به دنیای BinerCraft است.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
-              <a href="#download" className="rounded-2xl bg-blue-600 px-7 py-4 font-black shadow-2xl shadow-blue-600/30 transition hover:-translate-y-1 hover:bg-blue-500">دانلود رایگان لانچر ↓</a>
+              <a href={DOWNLOAD_URL} download className="rounded-2xl bg-blue-600 px-7 py-4 font-black shadow-2xl shadow-blue-600/30 transition hover:-translate-y-1 hover:bg-blue-500">دانلود رایگان لانچر ↓</a>
               <Link to="/" className="rounded-2xl border border-white/10 bg-white/5 px-7 py-4 font-bold backdrop-blur-xl transition hover:-translate-y-1 hover:bg-white/10">بازگشت به BinerCraft</Link>
             </div>
-            <div className="mt-9 flex flex-wrap gap-x-7 gap-y-3 text-sm text-slate-400">
+            <div className="mt-9 flex flex-wrap items-center gap-3 text-sm text-slate-400">
               <span>✓ رایگان</span><span>✓ رابط فارسی</span><span>✓ Windows</span><span>✓ اتصال سریع به سرور</span>
+              <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 font-bold text-emerald-300">● {launcherUsers === null ? '—' : launcherUsers} کاربر آنلاین در لانچر</span>
             </div>
           </motion.div>
 
@@ -89,7 +113,7 @@ export default function LauncherPage() {
       <section id="download" className="container mx-auto px-4 pb-28" dir="rtl">
         <div className="relative overflow-hidden rounded-[2.5rem] border border-blue-400/20 bg-gradient-to-br from-blue-600/20 via-slate-900 to-violet-700/15 p-10 text-center md:p-16">
           <div className="absolute left-1/2 top-0 h-48 w-96 -translate-x-1/2 rounded-full bg-blue-500/15 blur-3xl" />
-          <div className="relative"><p className="font-bold text-cyan-300">Biner Launcher</p><h2 className="mt-3 text-4xl font-black md:text-6xl">آماده‌ای شروع کنیم؟</h2><p className="mx-auto mt-5 max-w-2xl leading-8 text-slate-400">لانچر باینر را دریافت کن و تجربه جدید BinerCraft را از دسکتاپت شروع کن.</p><div className="mt-8 flex flex-wrap justify-center gap-3"><button type="button" className="rounded-2xl bg-blue-600 px-9 py-4 font-black shadow-2xl shadow-blue-600/30 transition hover:-translate-y-1 hover:bg-blue-500">دانلود برای Windows ↓</button><span className="rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-bold text-slate-400">به‌زودی</span></div><p className="mt-5 text-xs text-slate-500">لینک دانلود پس از انتشار فایل رسمی لانچر فعال می‌شود.</p></div>
+          <div className="relative"><p className="font-bold text-cyan-300">Biner Launcher</p><h2 className="mt-3 text-4xl font-black md:text-6xl">آماده‌ای شروع کنیم؟</h2><p className="mx-auto mt-5 max-w-2xl leading-8 text-slate-400">لانچر باینر را دریافت کن و تجربه جدید BinerCraft را از دسکتاپت شروع کن.</p><div className="mt-8 flex flex-wrap justify-center gap-3"><a href={DOWNLOAD_URL} download className="rounded-2xl bg-blue-600 px-9 py-4 font-black shadow-2xl shadow-blue-600/30 transition hover:-translate-y-1 hover:bg-blue-500">دانلود برای Windows ↓</a><span className="rounded-2xl border border-emerald-400/20 bg-emerald-400/5 px-6 py-4 text-sm font-bold text-emerald-300">● نسخه 1.1.0</span></div><div className="mt-5 flex flex-wrap justify-center gap-4 text-xs text-slate-500"><span>Windows</span><span>•</span><span>نسخه 1.1.0</span><span>•</span><span>{launcherUsers === null ? '—' : launcherUsers} کاربر آنلاین در لانچر</span></div></div>
         </div>
       </section>
     </main>
