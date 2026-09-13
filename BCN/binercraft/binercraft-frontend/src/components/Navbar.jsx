@@ -7,9 +7,10 @@ import NotificationBell from './NotificationBell.jsx'
 
 const menuItems = [
   { title: 'خانه', path: '/' }, { title: 'فروشگاه', path: '/shop' },
-  { title: 'وبلاگ', path: '/blog' }, { title: 'قوانین', path: '/rules' },
-  { title: 'راهنما', path: '/guide' }, { title: 'پشتیبانی', path: '/support' },
-  { title: 'تماس با ما', path: '/contact' }, { title: 'سوالات متداول', path: '/faq' },
+  { title: 'لانچر', path: '/launcher' }, { title: 'وبلاگ', path: '/blog' },
+  { title: 'قوانین', path: '/rules' }, { title: 'راهنما', path: '/guide' },
+  { title: 'پشتیبانی', path: '/support' }, { title: 'تماس با ما', path: '/contact' },
+  { title: 'سوالات متداول', path: '/faq' },
 ]
 
 export default function Navbar() {
@@ -52,7 +53,7 @@ export default function Navbar() {
   const total = getTotalItems()
   const active = (path) => path === '/' ? location.pathname === '/' : location.pathname.startsWith(path)
   const close = () => setIsOpen(false)
-  const logout = () => { localStorage.removeItem('user'); setUser(null); window.dispatchEvent(new Event('binercraft-auth-changed')); close(); navigate('/') }
+  const logout = () => { localStorage.removeItem('user'); localStorage.removeItem('token'); setUser(null); window.dispatchEvent(new Event('binercraft-auth-changed')); close(); navigate('/') }
   const linkClass = (path, mobile = false) => `${mobile ? 'w-full px-4 py-3' : 'px-3 py-2'} rounded-xl text-sm font-medium transition-all duration-300 ${active(path) ? 'bg-primary-500/15 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-text-secondary hover:text-primary-600 dark:hover:text-primary-400 hover:bg-glass-bg'}`
 
   return (
